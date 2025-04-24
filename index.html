@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>End of Market Vendor Invoice Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #e6d7b2, #a8e6cf);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 700px;
+      height: 85vh;
+      overflow-y: auto;
+    }
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass p-6">
+    <h2 class="text-2xl font-bold text-center mb-4 text-gray-900">End of Market Vendor Invoice Form</h2>
+    <form class="space-y-4">
+      <div>
+        <label>Vendor Business Name<span class="text-red-500"> *</span></label>
+        <input type="text" class="w-full p-2 border rounded bg-white" required>
+      </div>
+      <div>
+        <label>Individual ID<span class="text-red-500"> *</span></label>
+        <input type="text" class="w-full p-2 border rounded bg-white" required>
+      </div>
+      <div>
+        <label>Vendor ID<span class="text-red-500"> *</span></label>
+        <input type="text" class="w-full p-2 border rounded bg-white" required>
+      </div>
+      <div>
+        <label>Market Date<span class="text-red-500"> *</span></label>
+        <input type="date" class="w-full p-2 border rounded bg-white" required>
+      </div>
+      <div>
+        <label>Total SNAP tokens received (token count)<span class="text-red-500"> *</span></label>
+        <input type="number" id="snapTokens" class="w-full p-2 border rounded bg-white" required oninput="document.getElementById('snapValue').value = '$' + (this.value * 5).toFixed(2)">
+      </div>
+      <div>
+        <label>Total SNAP value</label>
+        <input type="text" id="snapValue" class="w-full p-2 border rounded bg-white" readonly>
+      </div>
+      <div>
+        <label>Total Wallace Sales</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>Total Community Bucks Sales</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>Total PGL Bucks Sales</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>Total out-of-pocket cash sales</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>Total out-of-pocket credit/debit sales</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>Total payment due to vendor</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>What were your best-selling items today?</label>
+        <textarea class="w-full p-2 border rounded bg-white"></textarea>
+      </div>
+      <div>
+        <label>Did you sell any produce to PGL?</label>
+        <select class="w-full p-2 border rounded bg-white" onchange="document.getElementById('pglProduceDetails').classList.toggle('hidden', this.value !== 'Yes')">
+          <option value="">- Select -</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <div id="pglProduceDetails" class="hidden">
+        <label>If so, which items?</label>
+        <div id="produceList"></div>
+        <button type="button" onclick="addProduceCard()" class="mt-2 text-sm text-blue-500">+ Add Produce</button>
+      </div>
+      <div>
+        <label>Total value of produce sold to PGL</label>
+        <input type="text" class="w-full p-2 border rounded bg-white">
+      </div>
+      <div>
+        <label>How much food did you have remaining (unsold) after the market?</label>
+        <select class="w-full p-2 border rounded bg-white">
+          <option value="">- Select -</option>
+          <option>A lot (most of what I brought)</option>
+          <option>Quite a bit (roughly half of what I brought)</option>
+          <option>Not much (a quarter or less of what I brought)</option>
+          <option>Almost nothing (I sold out)</option>
+        </select>
+      </div>
+      <div>
+        <label>What do you plan to do with the unsold food?</label>
+        <div class="space-y-1">
+          <label><input type="checkbox" onchange="toggleField('donationWhere', this)"> Donation</label>
+          <input type="text" id="donationWhere" placeholder="Where to?" class="w-full p-2 border rounded bg-white hidden">
+          <label><input type="checkbox"> Take it home for personal use</label>
+          <label><input type="checkbox"> Sell or give to PGL</label>
+          <label><input type="checkbox"> Sell or give to another vendor or retailer</label>
+          <label><input type="checkbox" onchange="toggleField('otherUnsoldFood', this)"> Other</label>
+          <input type="text" id="otherUnsoldFood" placeholder="Specify other" class="w-full p-2 border rounded bg-white hidden">
+          <label><input type="checkbox"> Unknown</label>
+        </div>
+      </div>
+      <div>
+        <label>How was your experience at the market today?</label>
+        <select class="w-full p-2 border rounded bg-white">
+          <option>Excellent</option>
+          <option>Good</option>
+          <option>Alright</option>
+          <option>Bad</option>
+        </select>
+      </div>
+      <div>
+        <label>Any market photos you want to share?</label>
+        <input type="file" class="w-full p-2 border rounded bg-white">
+        <p class="text-sm text-gray-600">By uploading these photos, you give PGL and REACH permission to use them in marketing materials.</p>
+      </div>
+      <div>
+        <label>Is there anything else you want to share?</label>
+        <textarea class="w-full p-2 border rounded bg-white"></textarea>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-full mt-4">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleField(id, checkbox) {
+      document.getElementById(id).classList.toggle('hidden', !checkbox.checked);
+    }
+
+    function addProduceCard() {
+      const container = document.getElementById('produceList');
+      const card = document.createElement('div');
+      card.className = 'flex items-center space-x-2 mt-2';
+      card.innerHTML = `
+        <select class="p-2 border rounded bg-white">
+          <option value="">- Select Produce -</option>
+          <option>Tomatoes</option>
+          <option>Carrots</option>
+          <option>Spinach</option>
+          <option>Peppers</option>
+        </select>
+        <input type="number" class="p-2 border rounded bg-white" placeholder="Qty">
+        <select class="p-2 border rounded bg-white">
+          <option>lbs</option>
+          <option>counts</option>
+          <option>bunches</option>
+        </select>
+        <button type="button" onclick="this.parentElement.remove()" class="text-red-500">✖</button>
+      `;
+      container.appendChild(card);
+    }
+  </script>
+</body>
+</html>
