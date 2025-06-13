@@ -36,21 +36,24 @@
     <h2 class="text-2xl font-bold text-center mb-4 text-gray-900">End of Market Vendor Invoice Form</h2>
     <form class="space-y-4">
       <div>
-        <label>Vendor Business Name<span class="text-red-500"> *</span></label>
-        <input type="text" class="w-full p-2 border rounded bg-white" required>
-      </div>
-      <div>
-        <label>Individual ID<span class="text-red-500"> *</span></label>
-        <input type="text" class="w-full p-2 border rounded bg-white" required>
+        <label>Vendor PIN<span class="text-red-500"> *</span></label>
+        <input type="text" id="vendorPin" name="vendorPin" class="w-full p-2 border rounded bg-white" required onchange="autofillVendorInfo()">
       </div>
       <div>
         <label>Vendor ID<span class="text-red-500"> *</span></label>
-        <input type="text" class="w-full p-2 border rounded bg-white" required>
+        <input type="text" id="vendorId" name="vendorId" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
-        <label>Market Date<span class="text-red-500"> *</span></label>
-        <input type="date" class="w-full p-2 border rounded bg-white" required>
+        <label>Vendor Business Name<span class="text-red-500"> *</span></label>
+        <input type="text" id="vendorName" name="vendorName" class="w-full p-2 border rounded bg-white" readonly>
       </div>
+      <div>
+  <label>Select a market date range that you want to generate invoice for<span class="text-red-500"> *</span></label>
+  <div class="flex gap-2">
+    <input type="date" id="startDate" class="w-1/2 p-2 border rounded bg-white" required>
+    <input type="date" id="endDate" class="w-1/2 p-2 border rounded bg-white" required onchange="autofillSalesData()">
+  </div>
+</div>
       <div>
         <label>Total SNAP tokens received (token count)<span class="text-red-500"> *</span></label>
         <input type="number" id="snapTokens" class="w-full p-2 border rounded bg-white" required oninput="document.getElementById('snapValue').value = '$' + (this.value * 5).toFixed(2)">
@@ -83,10 +86,30 @@
         <label>Total payment due to vendor</label>
         <input type="text" class="w-full p-2 border rounded bg-white">
       </div>
-      <div>
-        <label>What were your best-selling items today?</label>
-        <textarea class="w-full p-2 border rounded bg-white"></textarea>
-      </div>
+      <div id="farmerBestSellers" class="hidden space-y-4">
+  <label class="block font-bold text-gray-800">What were your best-selling items today?</label>
+
+  <div>
+    <h4 class="font-semibold">1st Best-Selling Item:</h4>
+    <select id="bestItem1" class="w-full p-2 border rounded bg-white">
+      <option value="">- Select Produce -</option>
+    </select>
+  </div>
+
+  <div>
+    <h4 class="font-semibold">2nd Best-Selling Item:</h4>
+    <select id="bestItem2" class="w-full p-2 border rounded bg-white">
+      <option value="">- Select Produce -</option>
+    </select>
+  </div>
+
+  <div>
+    <h4 class="font-semibold">3rd Best-Selling Item:</h4>
+    <select id="bestItem3" class="w-full p-2 border rounded bg-white">
+      <option value="">- Select Produce -</option>
+    </select>
+  </div>
+</div>
       <div>
         <label>Did you sell any produce to PGL?</label>
         <select class="w-full p-2 border rounded bg-white" onchange="document.getElementById('pglProduceDetails').classList.toggle('hidden', this.value !== 'Yes')">
@@ -142,7 +165,7 @@
         <p class="text-sm text-gray-600">By uploading these photos, you give PGL and REACH permission to use them in marketing materials.</p>
       </div>
       <div>
-        <label>Is there anything else you want to share?</label>
+        <label>Do you have and questions or comments?</label>
         <textarea class="w-full p-2 border rounded bg-white"></textarea>
       </div>
       <div class="text-center">
@@ -152,6 +175,75 @@
   </div>
 
   <script>
+
+    window.onload = () => {
+  const produceOptions = [
+    "African eggplants", "African Maize", "Sweet Potato Leaves", "Potatoes", 
+    "Collard Greens", "Kale", "Tomatoes", "Onions", "Swiss Chards", "Peas", "Beans",
+    "Cucumbers", "Mchicha (African Spinach)", "Nightshade", "Green Beans", "Pumpkin and Leaves",
+    "Broccoli", "Radish", "Lettuce", "Zucchini", "Cauliflower", "Beets", "Celery", "Carrot",
+    "Bell Pepper", "Black Eyes Peas", "cilantro", "Cucumber", "Chilies", "Potatoes", "Corn",
+    "Blueberries", "Strawberry", "Onions", "Garlic", "Tomatillo"
+  ];
+
+  ["bestItem1", "bestItem2", "bestItem3"].forEach(id => {
+    const select = document.getElementById(id);
+    produceOptions.forEach(optionText => {
+      const opt = document.createElement("option");
+      opt.value = optionText;
+      opt.textContent = optionText;
+      select.appendChild(opt);
+    });
+  });
+};
+
+  function autofillVendorInfo() {
+    const pin = document.getElementById("vendorPin").value.trim();
+    if (pin === "6045") {
+      document.getElementById("vendorId").value = "REACH-FARM-6045";
+      document.getElementById("vendorName").value = "GrowMore";
+      document.getElementById("vendorType").value = "Farmer";
+      document.getElementById("farmerBestSellers").classList.remove("hidden");
+      document.getElementById("farmerOnlyFields").classList.remove("hidden");
+    } else {
+      document.getElementById("farmerBestSellers").classList.add("hidden");
+      document.getElementById("farmerOnlyFields").classList.add("hidden");
+    }
+  }
+
+  function autofillSalesData() {
+    document.getElementById("snapTokens").value = 400;
+    document.getElementById("snapValue").value = "$800.00";
+    document.getElementById("snapTokens").style.backgroundColor = "yellow";
+    document.getElementById("snapValue").style.backgroundColor = "yellow";
+
+    document.querySelectorAll('input').forEach(input => {
+      switch (input.previousElementSibling?.textContent?.trim()) {
+        case "Total Wallace Sales":
+          input.value = "$900.00";
+          input.style.backgroundColor = "red";
+          break;
+        case "Total Community Bucks Sales":
+          input.value = "$796.00";
+          input.style.backgroundColor = "lightgreen";
+          break;
+        case "Total PGL Bucks Sales":
+          input.value = "$840.00";
+          input.style.backgroundColor = "lightblue";
+          break;
+        case "Total out-of-pocket cash sales":
+          input.value = "$1640.00";
+          break;
+        case "Total out-of-pocket credit/debit sales":
+          input.value = "$3552.00";
+          break;
+        case "Total payment due to vendor":
+          input.value = "$3336.00";
+          break;
+      }
+    });
+  }
+    
     function toggleField(id, checkbox) {
       document.getElementById(id).classList.toggle('hidden', !checkbox.checked);
     }
