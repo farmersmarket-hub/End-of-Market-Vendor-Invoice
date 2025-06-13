@@ -110,55 +110,49 @@
     </select>
   </div>
 </div>
+      <div id="farmerOnlyFields" class="hidden">
+  <!-- Total value of produce sold to PGL -->
+  <div>
+    <label>Total value of produce sold to PGL</label>
+    <input type="text" class="w-full p-2 border rounded bg-white">
+  </div>
+
+  <!-- Do you have any remaining produce -->
+  <div>
+    <label>Do you have any remaining (unsold) produce after the market?</label>
+    <select class="w-full p-2 border rounded bg-white">
+      <option value="">- Select -</option>
+      <option>A lot (most of what I brought)</option>
+      <option>Quite a bit (roughly half of what I brought)</option>
+      <option>Not much (a quarter or less of what I brought)</option>
+      <option>Almost nothing (I sold out)</option>
+    </select>
+  </div>
+
+  <!-- What do you plan to do with unsold -->
+  <div>
+    <label>What do you plan to do with the unsold food?</label>
+    <div class="space-y-1">
+      <label><input type="checkbox" onchange="toggleField('donationWhere', this)"> Donation</label>
+      <input type="text" id="donationWhere" placeholder="Where to?" class="w-full p-2 border rounded bg-white hidden">
+      <label><input type="checkbox"> Take it home for personal use</label>
+      <label><input type="checkbox"> Sell or give to PGL</label>
+      <label><input type="checkbox"> Sell or give to another vendor or retailer</label>
+      <label><input type="checkbox" onchange="toggleField('otherUnsoldFood', this)"> Other</label>
+      <input type="text" id="otherUnsoldFood" placeholder="Specify other" class="w-full p-2 border rounded bg-white hidden">
+      <label><input type="checkbox"> Unknown</label>
+    </div>
+  </div>
+</div>
+
       <div>
-        <label>Did you sell any produce to PGL?</label>
-        <select class="w-full p-2 border rounded bg-white" onchange="document.getElementById('pglProduceDetails').classList.toggle('hidden', this.value !== 'Yes')">
-          <option value="">- Select -</option>
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </div>
-      <div id="pglProduceDetails" class="hidden">
-        <label>If so, which items?</label>
-        <div id="produceList"></div>
-        <button type="button" onclick="addProduceCard()" class="mt-2 text-sm text-blue-500">+ Add Produce</button>
-      </div>
-      <div>
-        <label>Total value of produce sold to PGL</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
-      </div>
-      <div>
-        <label>How much food did you have remaining (unsold) after the market?</label>
-        <select class="w-full p-2 border rounded bg-white">
-          <option value="">- Select -</option>
-          <option>A lot (most of what I brought)</option>
-          <option>Quite a bit (roughly half of what I brought)</option>
-          <option>Not much (a quarter or less of what I brought)</option>
-          <option>Almost nothing (I sold out)</option>
-        </select>
-      </div>
-      <div>
-        <label>What do you plan to do with the unsold food?</label>
-        <div class="space-y-1">
-          <label><input type="checkbox" onchange="toggleField('donationWhere', this)"> Donation</label>
-          <input type="text" id="donationWhere" placeholder="Where to?" class="w-full p-2 border rounded bg-white hidden">
-          <label><input type="checkbox"> Take it home for personal use</label>
-          <label><input type="checkbox"> Sell or give to PGL</label>
-          <label><input type="checkbox"> Sell or give to another vendor or retailer</label>
-          <label><input type="checkbox" onchange="toggleField('otherUnsoldFood', this)"> Other</label>
-          <input type="text" id="otherUnsoldFood" placeholder="Specify other" class="w-full p-2 border rounded bg-white hidden">
-          <label><input type="checkbox"> Unknown</label>
-        </div>
-      </div>
-      <div>
-        <label>How was your experience at the market today?</label>
-        <select class="w-full p-2 border rounded bg-white">
-          <option>Excellent</option>
-          <option>Good</option>
-          <option>Alright</option>
-          <option>Bad</option>
-        </select>
-      </div>
+  <label class="block font-bold text-gray-800 mb-1">How was your experience at the market today?</label>
+  <div id="starRating" class="flex space-x-1 cursor-pointer text-2xl text-gray-400">
+    <!-- Stars will be rendered here -->
+  </div>
+  <input type="hidden" id="marketExperienceRating" name="marketExperienceRating">
+</div>
+
       <div>
         <label>Any market photos you want to share?</label>
         <input type="file" class="w-full p-2 border rounded bg-white">
@@ -210,6 +204,29 @@
       document.getElementById("farmerOnlyFields").classList.add("hidden");
     }
   }
+
+    function renderStars(rating) {
+  const starContainer = document.getElementById('starRating');
+  starContainer.innerHTML = '';
+
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement('span');
+    star.innerHTML = i <= rating ? '★' : '☆';
+    star.className = 'hover:text-yellow-400';
+    star.onclick = () => {
+      document.getElementById('marketExperienceRating').value = i;
+      renderStars(i);
+    };
+    starContainer.appendChild(star);
+  }
+}
+
+window.onload = () => {
+  renderStars(0); // Initial state: no stars selected
+
+  // existing code like populating bestItem dropdowns can stay here too
+};
+
 
   function autofillSalesData() {
     document.getElementById("snapTokens").value = 400;
