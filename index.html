@@ -301,7 +301,7 @@ document.querySelector('form').addEventListener('submit', async function(e) {
   data.invoiceNumber = 'INV' + Date.now();
 
   // Call Apps Script Web App
-  const response = await fetch('https://script.google.com/macros/s/AKfycbyCLzuy6y0hfPEGAt4tfnKm2MJvvVBBUG6iNX0soz5IWjGWmFGtJv9intFWBtx-T8H0/exec', {
+  const response = await fetch('https://script.google.com/macros/s/AKfycbzN32-glC9F9JgIIDxDZpzmeLtDbKa-thpIFr0Hb-zv0h6qq6EzJMvZrjlCbNcqkqop/exec', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: { 'Content-Type': 'application/json' }
