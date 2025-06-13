@@ -60,7 +60,7 @@
 </div>
       <div>
         <label>Total SNAP tokens received (token count)<span class="text-red-500"> *</span></label>
-        <input type="number" id="snapTokens" class="w-full p-2 border rounded bg-white" required oninput="document.getElementById('snapValue').value = '$' + (this.value * 5).toFixed(2)">
+        <input type="number" id="snapTokens" class="w-full p-2 border rounded bg-white" required readonly>
       </div>
       <div>
         <label>Total SNAP value</label>
@@ -68,27 +68,27 @@
       </div>
       <div>
         <label>Total Wallace Sales</label>
-        <input type="text" name="wallaceSales" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="wallaceSales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total Community Bucks Sales</label>
-        <input type="text" name="communitySales" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="communitySales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total PGL Bucks Sales</label>
-        <input type="text" name="pglSales" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="pglSales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total out-of-pocket cash sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
+        <input type="text" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total out-of-pocket credit/debit sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
+        <input type="text" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total payment due to vendor</label>
-        <input type="text" name="totalDue" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="totalDue" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div id="farmerBestSellers" class="hidden space-y-4">
   <label class="block font-bold text-gray-800">What were your best-selling items today?</label>
