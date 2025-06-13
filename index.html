@@ -47,6 +47,10 @@
         <label>Vendor Business Name<span class="text-red-500"> *</span></label>
         <input type="text" id="vendorName" name="vendorName" class="w-full p-2 border rounded bg-white" readonly>
       </div>
+       <div>
+        <label>Vendor Type<span class="text-red-500"> *</span></label>
+        <input type="text" id="vendorType" name="vendorType" class="w-full p-2 border rounded bg-white" readonly>
+      </div>
       <div>
   <label>Select a market date range that you want to generate invoice for<span class="text-red-500"> *</span></label>
   <div class="flex gap-2">
@@ -60,19 +64,19 @@
       </div>
       <div>
         <label>Total SNAP value</label>
-        <input type="text" id="snapValue" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="snapValue" name="snapValue" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total Wallace Sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="wallaceSales" class="w-full p-2 border rounded bg-white">
       </div>
       <div>
         <label>Total Community Bucks Sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="communitySales" class="w-full p-2 border rounded bg-white">
       </div>
       <div>
         <label>Total PGL Bucks Sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="pglSales" class="w-full p-2 border rounded bg-white">
       </div>
       <div>
         <label>Total out-of-pocket cash sales</label>
@@ -84,7 +88,7 @@
       </div>
       <div>
         <label>Total payment due to vendor</label>
-        <input type="text" class="w-full p-2 border rounded bg-white">
+        <input type="text" name="totalDue" class="w-full p-2 border rounded bg-white">
       </div>
       <div id="farmerBestSellers" class="hidden space-y-4">
   <label class="block font-bold text-gray-800">What were your best-selling items today?</label>
@@ -287,6 +291,40 @@ window.onload = () => {
       `;
       container.appendChild(card);
     }
+
+    <script>
+document.querySelector('form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+
+  // Add invoice number and timestamp
+  data.invoiceNumber = 'INV' + Date.now();
+
+  // Call Apps Script Web App
+  const response = await fetch('https://script.google.com/macros/s/AKfycbwGJ5QXvbcu0gaXLiZTT3vi7MUxBOEVydNmdvC86HcwUK7q1WohICaSXjAJq9B7RDuI/exec', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  if (response.ok) {
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${data.invoiceNumber}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    alert("Invoice submitted and downloaded successfully!");
+  } else {
+    alert("Failed to generate invoice.");
+  }
+});
+</script>
+
   </script>
 </body>
 </html>
