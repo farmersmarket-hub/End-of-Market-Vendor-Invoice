@@ -6,6 +6,7 @@
   <title>End of Market Vendor Invoice Form</title>
   <script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+	<script src="https://smtpjs.com/v3/smtp.js"></script>
   <style>
     body {
       background: linear-gradient(to right, #e6d7b2, #a8e6cf);
@@ -293,6 +294,10 @@ window.onload = () => {
       container.appendChild(card);
     }
 
+	  (function() {
+    emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your actual public key
+  })();
+
 	 
   async function generateInvoiceAndSubmit() {
     const { jsPDF } = window.jspdf;
@@ -331,21 +336,24 @@ window.onload = () => {
     const reader = new FileReader();
     reader.onloadend = async function () {
       const pdfBase64 = reader.result.split(',')[1];
-
-      // Send to Google Apps Script
-      await fetch("https://script.google.com/macros/s/AKfycbyt5fho65vjW1uwvsKtaxr3H_YTrUQPimDwJb2qRl5vP5e-sRsFQY3ijJBOB7q9DZJI/exec", {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({
-          invoiceNumber: invoiceNumber,
-          pdfBase64: pdfBase64
-        })
-      });
     };
     reader.readAsDataURL(pdfBlob);
   }
+	  Email.send({
+  Host: "smtp-relay.sendinblue.com",
+  Username: "your@domain.com",
+  Password: "SMTP_PASSWORD",
+  To: "harihasi@mail.uc.edu",
+  From: "your@domain.com",
+  Subject: `Invoice #${invoiceNumber}`,
+  Body: "Please find attached your invoice.",
+  Attachments: [
+    {
+      name: `${invoiceNumber}.pdf`,
+      data: base64PDF // as "base64PDF" should be in base64 string format
+    }
+  ]
+}).then(msg => alert("Invoice sent!"));
 
   // Call this on form submission or button click
   // <button onclick="generateInvoiceAndSubmit()">Submit</button
