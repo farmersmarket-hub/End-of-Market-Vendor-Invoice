@@ -337,8 +337,6 @@ window.onload = () => {
     reader.onloadend = async function () {
       const pdfBase64 = reader.result.split(',')[1];
     };
-    reader.readAsDataURL(pdfBlob);
-  }
 	  Email.send({
   Host: "smtp-relay.sendinblue.com",
   Username: "your@domain.com",
@@ -354,6 +352,9 @@ window.onload = () => {
     }
   ]
 }).then(msg => alert("Invoice sent!"));
+    reader.readAsDataURL(pdfBlob);
+  }
+	  
 
   // Call this on form submission or button click
   // <button onclick="generateInvoiceAndSubmit()">Submit</button
