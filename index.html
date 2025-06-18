@@ -36,7 +36,7 @@
 <body>
   <div class="glass p-6">
     <h2 class="text-2xl font-bold text-center mb-4 text-gray-900">End of Market Vendor Invoice Form</h2>
-    <form class="space-y-4" onsubmit="generateInvoiceAndSubmit()">
+    <form class="space-y-4" onsubmit="generateInvoiceAndSubmit(event)">
       <div>
         <label>Vendor PIN<span class="text-red-500"> *</span></label>
         <input type="text" id="vendorPin" name="vendorPin" class="w-full p-2 border rounded bg-white" required onchange="autofillVendorInfo()">
@@ -299,7 +299,8 @@ window.onload = () => {
   })();
 
 	 
-  async function generateInvoiceAndSubmit() {
+  async function generateInvoiceAndSubmit(e) {
+	  e.preventDefault();
     const { jsPDF } = window.jspdf;
 
     const data = {
