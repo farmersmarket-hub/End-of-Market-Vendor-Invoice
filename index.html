@@ -210,10 +210,11 @@
 
   function autofillVendorInfo() {
     const vendorPin = document.getElementById('vendorPin').value;
-		const scriptUrl = 'https://script.google.com/macros/s/AKfycbyXdDsoPDf3n2HDAofGWgl9LbwI3kQjJLm7JabQUwWg_V6Lw1VlknFZvefre2I0QkJsJg/exec';
+		const scriptUrl = 'https://script.google.com/macros/s/AKfycbz9J8QstkL-VO3F4xopEUC3Y_VuPLOGQ-pB8_oZebT-lC1nmzupdfv-KZds19ypkfaFPg/exec';
 	    const spinner = document.getElementById('vendorSpinner');
 		const vendorInput = document.getElementById('vendorId');
 		const vendorName = document.getElementById('vendorName');
+	  const vendorType = document.getElementById('vendorType');
 	  const token = document.getElementById('snapTokens');
 	  const snap = document.getElementById('snapValue');
 	  const community = document.getElementById('communitySales');
@@ -237,6 +238,8 @@
 					vendorInput.setCustomValidity(""); // Valid
 				  } if (data.vendorName) {
 					vendorName.value = data.vendorName;
+				  } if (data.vendorType) {
+					vendorType.value = data.vendorType;
 				  } if (data.totalToken) {
 					token.value = data.totalToken;
     					token.style.backgroundColor = "yellow";
