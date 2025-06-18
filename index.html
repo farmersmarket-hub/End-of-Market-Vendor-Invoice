@@ -43,7 +43,14 @@
       </div>
       <div>
         <label>Vendor ID<span class="text-red-500"> *</span></label>
-        <input type="text" id="vendorId" name="vendorId" class="w-full p-2 border rounded bg-white" readonly>
+        <div class="relative">
+		<input type="text" id="vendorId" name="vendorId" class="w-full p-2 border rounded bg-white" readonly data-error="Vendor PIN not found. Please check and try again."/>
+		<div id="vendorSpinner" class="absolute right-3 top-2.5 hidden">
+	      <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+		<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+		<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+	      </svg>
+	    </div>
       </div>
       <div>
         <label>Vendor Business Name<span class="text-red-500"> *</span></label>
