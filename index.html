@@ -335,24 +335,25 @@ window.onload = () => {
     const pdfBlob = doc.output("blob");
     const reader = new FileReader();
     reader.onloadend = async function () {
-      const pdfBase64 = reader.result.split(',')[1];
-    };
-	  Email.send({
-  Host: "smtp-relay.sendinblue.com",
-  Username: "your@domain.com",
-  Password: "SMTP_PASSWORD",
-  To: "harihasi@mail.uc.edu",
-  From: "your@domain.com",
-  Subject: `Invoice #${invoiceNumber}`,
-  Body: "Please find attached your invoice.",
-  Attachments: [
-    {
-      name: `${invoiceNumber}.pdf`,
-      data: base64PDF // as "base64PDF" should be in base64 string format
-    }
-  ]
-}).then(msg => alert("Invoice sent!"));
-    reader.readAsDataURL(pdfBlob);
+	  const pdfBase64 = reader.result.split(',')[1];
+	
+	  await Email.send({
+	    Host: "smtp-relay.brevo.com",
+	    Username: "8f9c32001@smtp-brevo.com",
+	    Password: "7EL5fWCVDqcgkwyA",
+	    To: "harihasi@mail.uc.edu",
+	    From: "8f9c32001@smtp-brevo.com",
+	    Subject: `Invoice #${invoiceNumber}`,
+	    Body: "Please find attached your invoice.",
+	    Attachments: [
+	      {
+	        name: `${invoiceNumber}.pdf`,
+	        data: pdfBase64
+	      }
+	    ]
+	  }).then(msg => alert("Invoice sent!")).catch(err => alert("Failed: " + err));
+	};
+   reader.readAsDataURL(pdfBlob);
   }
 	  
 
