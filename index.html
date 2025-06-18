@@ -325,16 +325,16 @@ window.onload = () => {
     const { jsPDF } = window.jspdf;
 
     const data = {
-      vendorId: "REACH-FARM-6045",
-      vendorName: "GrowMore",
-      vendorType: "Farmer",
-      snapValue: "$800.00",
-      wallaceSales: "$900.00",
-      communitySales: "$796.00",
-      pglSales: "$840.00",
-      cashSales: "$1640.00",
-      cardSales: "$3552.00",
-      totalDue: "$3336.00"
+      vendorId: document.getElementById('vendorId').value,
+      vendorName: document.getElementById('vendorName').value,
+      vendorType: document.getElementById('vendorType').value,
+      snapValue: document.getElementById('snapValue').value,
+      wallaceSales: document.getElementById('wallaceSales').value,
+      communitySales: document.getElementById('communitySales').value,
+      pglSales: document.getElementById('pglSales').value,
+      cashSales: document.getElementById('cashSales').value,
+      cardSales: document.getElementById('cardSales').value,
+      totalDue: document.getElementById('totalDue').value
     };
 
     const invoiceNumber = "INV" + Date.now();
