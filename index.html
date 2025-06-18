@@ -54,10 +54,9 @@
         <input type="text" id="vendorType" name="vendorType" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
-  <label>Select a market date range that you want to generate invoice for<span class="text-red-500"> *</span></label>
+  <label>Market Date<span class="text-red-500"> *</span></label>
   <div class="flex gap-2">
-    <input type="date" id="startDate" class="w-1/2 p-2 border rounded bg-white" required>
-    <input type="date" id="endDate" class="w-1/2 p-2 border rounded bg-white" required onchange="autofillSalesData()">
+    <input type="date" id="marketDate" name="marketDate" class="w-1/2 p-2 border rounded bg-white" required>
   </div>
 </div>
       <div>
@@ -70,27 +69,27 @@
       </div>
       <div>
         <label>Total Wallace Sales</label>
-        <input type="text" name="wallaceSales" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="wallaceSales" name="wallaceSales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total Community Bucks Sales</label>
-        <input type="text" name="communitySales" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="communitySales" name="communitySales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total PGL Bucks Sales</label>
-        <input type="text" name="pglSales" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="pglSales" name="pglSales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total out-of-pocket cash sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="cashSales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total out-of-pocket credit/debit sales</label>
-        <input type="text" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="cardSales" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div>
         <label>Total payment due to vendor</label>
-        <input type="text" name="totalDue" class="w-full p-2 border rounded bg-white" readonly>
+        <input type="text" id="totalDue" name="totalDue" class="w-full p-2 border rounded bg-white" readonly>
       </div>
       <div id="farmerBestSellers" class="hidden space-y-4">
   <label class="block font-bold text-gray-800">What were your best-selling items today?</label>
@@ -196,19 +195,73 @@
     });
   });
 };
+	  function parseDollar(val) {
+	  if (!val) return 0;
+	  const numeric = val.replace(/[^\d.-]/g, '');
+	  return isNaN(parseFloat(numeric)) ? 0 : parseFloat(numeric);
+	}
 
   function autofillVendorInfo() {
-    const pin = document.getElementById("vendorPin").value.trim();
-    if (pin === "6045") {
-      document.getElementById("vendorId").value = "REACH-FARM-6045";
-      document.getElementById("vendorName").value = "GrowMore";
-      document.getElementById("vendorType").value = "Farmer";
-      document.getElementById("farmerBestSellers").classList.remove("hidden");
-      document.getElementById("farmerOnlyFields").classList.remove("hidden");
-    } else {
-      document.getElementById("farmerBestSellers").classList.add("hidden");
-      document.getElementById("farmerOnlyFields").classList.add("hidden");
-    }
+    const vendorPin = document.getElementById('vendorPin').value;
+		  const vendorAlertPin = document.getElementById('vendorAlertPin').value;
+		const scriptUrl = 'https://script.google.com/macros/s/AKfycbzb5GIq_4LLNWx339DqOjYGN-ZWAqPwQ4nsNgg0OvdqF5JK7RQEJkpqTWWcYGEBdxXuzw/exec';
+	    const spinner = document.getElementById('vendorSpinner');
+		const vendorInput = document.getElementById('vendorId');
+		const vendorName = document.getElementById('vendorName');
+	  const token = document.getElementById('snapTokens');
+	  const snap = document.getElementById('snapValue');
+	  const community = document.getElementById('communitySales');
+	  const pgl = document.getElementById('pglSales');
+	  const wallace = document.getElementById('wallaceSales');
+	  const cash = document.getElementById('cashSales');
+	  const card = document.getElementById('cardSales');
+	  const due = document.getElementById('totalDue');
+
+			spinner.classList.remove('hidden');
+  			vendorInput.value = '';
+			vendorInput.setCustomValidity(""); // Clear old error
+ 			vendorInput.reportValidity();      // Reset UI
+
+		fetch(`${scriptUrl}?individualid=${encodeURIComponent(vendorPin)}`)
+			.then(res => res.json())
+			.then(data => {
+				if (data) {
+				  if (data.vendorId) {
+					vendorInput.value = data.vendorId;
+					vendorInput.setCustomValidity(""); // Valid
+				  } if (data.vendorName) {
+					vendorName.value = data.vendorName;
+				  } if (data.totalToken) {
+					token.value = data.totalToken;
+    					token.style.backgroundColor = "yellow";
+				  } if (data.totalSNAP) {
+					snap.value = data.totalSNAP;
+    					snap.style.backgroundColor = "yellow";
+				  } if (data.totalCommunity) {
+					community.value = data.totalCommunity;
+    					community.style.backgroundColor = "lightgreen";
+				  } if (data.totalPGL) {
+					pgl.value = data.totalPGL;
+    					pgl.style.backgroundColor = "lightblue";
+				  } if (data.totalWallace) {
+					wallace.value = data.totalWallace;
+    					wallace.style.backgroundColor = "red";
+				  } if (data.totalCard) {
+					card.value = data.totalCard;
+				  } if (data.totalCash) {
+					cash.value = data.totalCash;
+				  }
+					due.value = `$${(parseDollar(data.totalSNAP) + parseDollar(data.totalCommunity) + parseDollar(data.totalPGL) + parseDollar(data.totalWallace)).toFixed(2)}`;
+				}	else {
+					vendorInput.value = '';
+					vendorInput.setCustomValidity(vendorInput.getAttribute('data-error'));
+					vendorInput.reportValidity();
+				}
+			})
+			.catch(err => console.error("Fetch error", err))
+			.finally(() => {
+				spinner.classList.add('hidden');
+			});
   }
 
     function renderStars(rating) {
@@ -232,40 +285,6 @@ window.onload = () => {
 
   // existing code like populating bestItem dropdowns can stay here too
 };
-
-
-  function autofillSalesData() {
-    document.getElementById("snapTokens").value = 400;
-    document.getElementById("snapValue").value = "$800.00";
-    document.getElementById("snapTokens").style.backgroundColor = "yellow";
-    document.getElementById("snapValue").style.backgroundColor = "yellow";
-
-    document.querySelectorAll('input').forEach(input => {
-      switch (input.previousElementSibling?.textContent?.trim()) {
-        case "Total Wallace Sales":
-          input.value = "$900.00";
-          input.style.backgroundColor = "red";
-          break;
-        case "Total Community Bucks Sales":
-          input.value = "$796.00";
-          input.style.backgroundColor = "lightgreen";
-          break;
-        case "Total PGL Bucks Sales":
-          input.value = "$840.00";
-          input.style.backgroundColor = "lightblue";
-          break;
-        case "Total out-of-pocket cash sales":
-          input.value = "$1640.00";
-          break;
-        case "Total out-of-pocket credit/debit sales":
-          input.value = "$3552.00";
-          break;
-        case "Total payment due to vendor":
-          input.value = "$3336.00";
-          break;
-      }
-    });
-  }
     
     function toggleField(id, checkbox) {
       document.getElementById(id).classList.toggle('hidden', !checkbox.checked);
