@@ -363,7 +363,7 @@ window.onload = () => {
     reader.onloadend = async function () {
 	  const pdfBase64 = reader.result.split(',')[1];
 	    
-	sendEmail();
+	//sendEmail();
 	  /*await Email.send({
 	    Host: "smtp-relay.brevo.com",
 	    Username: "8f9c32001@smtp-brevo.com",
@@ -387,7 +387,7 @@ window.onload = () => {
 	sendData(formData);
   }
 
-	  function sendEmail() {
+	  /*function sendEmail() {
             Email.send({
                 Host: "smtp-relay.brevo.com",
                 Username: "8f9c32001@smtp-brevo.com",
@@ -400,7 +400,7 @@ window.onload = () => {
             .then(function (message) {
                 alert("Mail sent successfully"); // Alert message on successful email delivery
             });
-        }
+        }*/
 
 	  function sendData(formData) {
 		  const data = {};
@@ -432,6 +432,25 @@ window.onload = () => {
 		    console.error('Error:', error);
 		    // Handle the error here
 		  });
+
+		  fetch("https://api.brevo.com/v3/smtp/email", {
+			  method: "POST",
+			  headers: {
+			    "accept": "application/json",
+			    "api-key": "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",
+			    "content-type": "application/json"
+			  },
+			  body: JSON.stringify({
+			    sender: { name: "Farmer's Market", email: "8f9c32001@smtp-brevo.com" },
+			    to: [{ email: "recipient@example.com", name: "Vendor" }],
+			    subject: "Vendor Invoice",
+			    htmlContent: "<p>Hello Vendor,<br/>Thanks for being part of the market!<br/>Your invoice is attached.</p>"
+			  })
+		})
+		.then(response => response.json())
+		.then(data => console.log("Success:", data))
+		.catch(error => console.error("Error:", error));
+
 		}
 	  
 
